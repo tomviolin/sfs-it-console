@@ -130,12 +130,12 @@ if __name__ == '__main__':
                 logging.debug('{"status": "OK"}')
                 #print(json.dumps(response, indent=4))
                 ping_history = ping_history + [str(response)]
-                ping_responses = ping_responses + [{"id": mon['id'], "desc":mon['desc'], "status": "OK","rtt_avg_ms": response, "history": ','.join(ping_history)}]
+                ping_responses = ping_responses + [{"id": mon['id'], "devicetype":mon['devicetype'], "desc":mon['desc'], "status": "OK","rtt_avg_ms": response, "history": ','.join(ping_history)}]
             else:
                 #print('{"status": "ERROR"}')
                 logging.debug('{"status": "ERROR"}')
                 ping_history = ping_history + ["-1"]
-                ping_responses = ping_responses + [{"id": mon['id'], "desc":mon['desc'], "status": "ERROR","rtt_avg_ms": -1, "history": ','.join(ping_history)}]
+                ping_responses = ping_responses + [{"id": mon['id'], "devicetype":mon['devicetype'], "desc":mon['desc'], "status": "ERROR","rtt_avg_ms": -1, "history": ','.join(ping_history)}]
             c = dbconn.cursor()
             res = dbconn.execute('''
                 INSERT OR IGNORE INTO ping (id, desc, host, status, rtt_avg_ms) VALUES (?, ?, ?, ?, ?)
@@ -166,6 +166,7 @@ if __name__ == '__main__':
                             "id": dcon['id'],
                             "name": dcon['name'],
                             "desc": dcon['desc'] + ":" +response.json()[0]['Status'],
+                            "servicetype":dcon['servicetype'], 
                             "status": "OK"
                         }
                     ]
@@ -177,6 +178,7 @@ if __name__ == '__main__':
                             "id": dcon['id'], 
                             "name": dcon['name'],
                             "desc": dcon['desc'] + ":ERROR",
+                            "servicetype":dcon['servicetype'], 
                             "status": "ERROR"
                         }
                     ]
@@ -209,15 +211,15 @@ if __name__ == '__main__':
                 buffered = BytesIO()
                 im.save(buffered, format="PNG")
                 data_url = base64.b64encode(buffered.getvalue()).decode('ascii')
-                image_responses = image_responses + [{"id": img['id'], "desc": img['desc'], "url": url, "dataurl": "data:image/png;base64," + data_url, "status":"OK"}]
+                image_responses = image_responses + [{"id": img['id'], "desc": img['desc'], "imagetype":img['imagetype'], "url": url, "dataurl": "data:image/png;base64," + data_url, "status":"OK"}]
             else:
                 #print('{"status": "ERROR"}')
                 logging.debug('{"status": "ERROR"}')
-                image_responses = image_responses + [{"id": img['id'], "desc": img['desc'], "dataurl": redXurl, "status":"ERROR"}]
+                image_responses = image_responses + [{"id": img['id'], "desc": img['desc'], "imagetype":img['imagetype'], "dataurl": redXurl, "status":"ERROR"}]
             c = dbconn.cursor()
             res = c.execute('''
-                INSERT OR IGNORE INTO image (id, desc, dataurl, status) VALUES (?, ?, ?, ?)
-            ''', (img['id'], img['desc'], image_responses[-1]['dataurl'], image_responses[-1]['status']))
+                INSERT OR IGNORE INTO image (id, desc, status) VALUES (?, ?, ?)
+            ''', (img['id'], img['desc'], image_responses[-1]['status']))
             dbconn.commit()
             c.close()
 

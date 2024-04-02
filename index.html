@@ -1,5 +1,7 @@
 <!doctype html>
 <html lang="en">
+	<!-- specify encoding -->
+	<meta charset="utf-8">
 	<head>
 		<title>Home</title>
 		<!-- jquery from jsdelivr -->
@@ -56,10 +58,30 @@
 				border-radius: 5px;
 				font-size: 15px;
 			}
+			.mon.ping div.desc::before {
+				content: "🛜️";
+				font-weight: bold;
+			}
+			.mon.docker div.desc::before {
+				content: "🐳";
+				font-weight: bold;
+			}
+			.mon.image div.desc::before {
+				content: "🖼️";
+				font-weight: bold;
+			}
+			.mon div.desc {
+				display: inline-block;
+			}
+			span.bull {
+				font-size: 15px;
+				font-weight: bold;
+				margin-right: 5px;
+			}
 			span.bullOK {
 				color: green;
 			}
-			span.bullWARN {
+			an.bullWARN {
 				color: orange;
 			}
 			span.bullERROR {
@@ -67,7 +89,16 @@
 			}
 			span.sparkline {
 				width: 32px;
-				height: 10px;
+				height: 15px;
+				display: inline-block;
+			}
+			div.rtt_avg_ms {
+				font-size: 10px;
+				color: #888;
+				min-width: 30px;
+				height:19px;
+				padding-bottom: 17px;
+				text-align: center;
 				display: inline-block;
 			}
 
@@ -95,20 +126,40 @@
 					$('.container').append('<div id="sfs_pinghead" style="clear:both;">PINGS</div>');
 				}
 				$.each(data['ping'], (key, value) => {
-					contents = '<span class="bull'+value.status+'">&#x25cf;</span> ' 
-						+ '<span class="sparkline" sparkline-height="20" sparkline-width="100" sparkline-bar-width="5" sparkline-bar-spacing="1" sparkline-type="bar" sparkline-bar-color="red,green,blue" style="display:none;">' + value.history + '</span>'+ value.desc
+					surrounding_div_id = "sfs_ping_" + value.id;
+					surrounding_div_bgcolor = value.status == "OK" ? "#eeffee" : "#ffeeee";
+					surrounding_div = `<div class="mon ping" 
+						id="${surrounding_div_id}" 
+						style="background-color: ${surrounding_div_bgcolor};">`;
+					contents = `
+       						<span class="bull bull${value.status}">&#x25cf;</span> 
+						<span class="sparkline" 
+       							sparkType="line" 
+       							sparkHeight="20px"
+							sparkWidth="100px"
+							sparkBarColor="red,green,blue">
+							<!-- ${value.history} -->
+       						</span>
+						<div class="rtt_avg_ms">${value.rtt_avg_ms}</div>
+						<div class="desc">${value.desc}</div>`;
 					if ($("div#sfs_ping_" + value.id).length == 0) {
 						// if the div doesn't exist, create it
-						$('.container').append('<div class="mon ping" id="sfs_ping_'+value.id+'" style="background-color: ' + (value.status == "OK" ? "#eeffee" : "#ffeeee") + ';">' + contents + '</div>');
+						$('.container').append(surrounding_div + contents + "</div>");
 					} else {									
 						// the div exists: update it
 						$("div#sfs_ping_" + value.id).html(contents);
-						$("div#sfs_ping_" + value.id).css({"background-color": value.status == "OK" ? "#eeffee" : "#ffeeee"});
+						$("div#sfs_ping_" + value.id).css({"background-color": surrounding_div_bgcolor});
 					}
 				});
 				if (data['ping'].length > 0) {
 					$("span.sparkline").show();
-					$("span.sparkline").sparkline();
+					$("span.sparkline").sparkline('html',{
+						spotRadius:3, 
+						minSpotColor:false,
+						maxSpotColor:false,
+						normalRangeMin:0.0,
+						normalRangeMax:9.0
+					});
 				}
 				// *** DOCKER SECTION ***
 				if ($("div#sfs_dockerhead").length == 0) {
@@ -116,7 +167,8 @@
 				}
 				$.each(data['docker'], (key, value) => {
 					console.log(value);
-					contents = '<span class="bull'+value.status+'">&#x25cf;</span> ' + value.desc;
+					contents = `<span class="bull bull${value.status}">&#x25cf;</span>
+       						<div class="desc">${value.desc}</div>`;
 					if ($("div#sfs_docker_" + value.id).length == 0) {
 						// if the div doesn't exist, create it
 						$('.container').append('<div class="mon docker" id="sfs_docker_'+value.id+'" style="background-color: ' + (value.status == "OK" ? "#eeffee" : "#ffeeee") + ';">' + contents + '</div>');
@@ -131,9 +183,9 @@
 				}
 				// *** IMAGE SECTION ***
 				$.each(data['image'], (key, value) => {
-					contents = '<a href="'+value.url+'" target="_blank"><img src="' + value.dataurl + '" /></a><br />' 
-						+ '<span class="bull'+value.status+'">&#x25cf;</span> '
-							+ value.desc;
+					contents = `<a href="${value.url}" target="_blank"><img src="${value.dataurl}" /></a><br />' 
+						<span class="bull bull'+value.status+'">&#x25cf;</span>
+						<div class="desc">${value.desc}</div>`;
 					if ($("div#sfs_image_" + value.id).length == 0) {
 						// if the div doesn't exist, create it
 						$('.container').append('<div class="mon image" id="sfs_image_'+value.id+'" style="background-color: ' + (value.status == "OK" ? "#eeffee" : "#ffeeee") + ';">' +  contents + '</div>');
@@ -150,7 +202,7 @@
 		console.log('ready');
 		refreshData('pdi');
 		setTimeout(() => {
-			setInterval(refreshData, 998, 'pd');
+			setInterval(refreshData, 5005, 'pd');
 		}, 50);
 		setInterval(refreshData, 10000, 'i');
 	});

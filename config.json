@@ -3,42 +3,111 @@
 		{
 			"id"   : "room_1099_workstation",
 			"desc" : "Room 1099 workstation",
+			"devicetype" : "A/V",
 			"host" : "UWM022022.ad.uwm.edu"
 		},{
 			"id"   : "secnas",
-			"desc" : "SECNAS Synology camera recording",
+			"desc" : "SECNAS Synology server",
+			"devicetype" : "server",
 			"host" : "secnas.sfs.uwm.edu"
 		},{
 			"id"   : "harborcam",
 			"desc" : "Harborcam RPi in room 248",
+			"devicetype" : "raspberrypi",
 			"host" : "hc01.sfs.uwm.edu"
 		},{
 			"id"   : "sfs-fatm",
 			"desc" : "SFS Docker server (sfs-fatm)",
+			"devicetype" : "server",
 			"host" : "sfs-fatm.sfs.uwm.edu"
 		},{
 			"id"   : "tomh-powerplex",
 			"desc" : "Tom H's Powerplex",
+			"devicetype" : "workstation",
 			"host" : "tomh-powerplex.sfs.uwm.edu"
 		},{
 
 			"id"   : "vm01",
 			"desc" : "VM01",
-			"type" : "ping",
+			"devicetype" : "server",
 			"host" : "hv1-149.sfs.uwm.edu"
 		},{
 			"id"   : "front-display",
 			"desc" : "Front display",
+			"devicetype" : "A/V",
 			"host" : "front-display.sfs.uwm.edu"
 		},{
 			"id"   : "sfsfiles01",
 			"desc" : "SFS Files01",
+			"devicetype" : "server",
 			"host" : "sfsfiles01.sfs.uwm.edu"
 		},{
 			"id"    : "googledns",
-			"desc"  : "Google DNS",
+			"desc"  : "Google DNS🔗",
+			"devicetype" : "network",
 			"host"  : "8.8.8.8"
+		},{
+			"id"    : "greenfield_circle",
+			"desc"  : "Greenfield Circle",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.240"
+		},{
+			"id"    : "osprey_cam",
+			"desc"  : "Osprey cam",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.26"
+		},{
+			"id"    : "wetbay",
+			"desc"  : "WetBay",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.32"
+		},{
+			"id"    : "ne_corner",
+			"desc"  : "NE corner",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.12"
+		},{
+			"id"    : "se_corner",
+			"desc"  : "SE corner",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.13"
+		},{
+			"id"    : "milestone_4",
+			"desc"  : "Milestone 4",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.8"
+		},{
+			"id"    : "greenfield_entrance",
+			"desc"  : "Greenfield Entrance",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.249"
+		},{
+			"id"    : "quad_camera",
+			"desc"  : "Quad Camera",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.10"
+		},{
+			"id"    : "milestone_single",
+			"desc"  : "Milestone Single",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.7"
+		},{
+			"id"    : "neeskay_sec",
+			"desc"  : "NeeskaySec",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.31"
+		},{
+			"id"    : "east_end_sec",
+			"desc"  : "east end sec",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.120"
+		},{
+			"id"    : "interior_west_entrance",
+			"desc"  : "Interior west entrance",
+			"devicetype" : "camera",
+			"host"  : "10.7.75.247"
 		}
+			
 	],
 	"docker" : [
 		{
@@ -46,30 +115,35 @@
 			"desc" : "intake water monitoring",
 			"host" : "sfs-fatm.sfs.uwm.edu",
 			"apiport" : "4243",
+			"servicetype" : "utilitymonitor",
 			"name" : ["intake"]
 		},{
 			"id"   : "roardaemon",
 			"desc" : "roardaemon",
 			"host" : "sfs-fatm.sfs.uwm.edu",
 			"apiport" : "4243",
+			"servicetype" : "calendaring",
 			"name" : ["readrooms"]
 		},{
 			"id"   : "wcupload",
 			"desc" : "webcam upload",
 			"host" : "sfs-fatm.sfs.uwm.edu",
 			"apiport" : "4243",
+			"servicetype" : "webcam",
 			"name" : ["wcupload"]
 		},{
 			"id"   : "glosbuoys",
 			"desc" : "glosbuoys",
 			"host" : "sfs-fatm.sfs.uwm.edu",
 			"apiport" : "4243",
+			"servicetype" : "buoy",
 			"name" : ["glosbuoys"]
 		},{
 			"id":"neeskay_web",
 			"desc":"neeskay_web",
 			"host":"sfs-fatm.sfs.uwm.edu",
 			"apiport":"4243",
+			"servicetype":"shipdata",
 			"name":["neeskay_web"]
 		}
 	],
@@ -78,21 +152,26 @@
 			"id" : "intake_temperature",
 			"name" : "intake_temperature",
 			"desc" : "intake water monitoring, temperature",
+			"imagetype" : "graph",
 			"url" : "http://waterbase.glwi.uwm.edu:8883/intake/sensgraph.php?sensor=1"	
 		},{
 			"id" : "intake_conductivity",
 			"name" : "intake_conductivity",
 			"desc" : "intake water monitoring, conductivity",
+			"imagetype" : "graph",
 			"url" : "http://waterbase.glwi.uwm.edu:8883/intake/sensgraph.php?sensor=2"
 		},{
 			"id" : "intake_turbidity",
 			"name" : "intake_turbidity",
 			"desc" : "intake water monitoring, turbidity",
+			"imagetype" : "graph",
 			"url" : "http://waterbase.glwi.uwm.edu:8883/intake/sensgraph.php?sensor=3"
 		},{
 			"id" : "harborcam",
 			"name" : "harborcam",
 			"desc" : "Harborcam",
+			"imagetype" : "webcam",
+			"customwidth" : "640",
 			"url" : "http://waterbase.uwm.edu/webcam/currentlink.jpg"
 		}
 	]
